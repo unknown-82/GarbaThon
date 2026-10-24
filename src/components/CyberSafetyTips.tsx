@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lightbulb, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Lightbulb, ChevronLeft, ChevronRight, PhoneCall, ExternalLink } from 'lucide-react';
 
 const SAFETY_TIPS = [
   {
@@ -34,12 +34,16 @@ const SAFETY_TIPS = [
   },
   {
     title: 'National Cyber Crime Helpline: 1930',
-    text: 'If you have been scammed or threatened, immediately dial 1930 or visit cybercrime.gov.in to report the incident and freeze fraudulent transactions.',
+    text: 'If you have been scammed or threatened, immediately dial 1930 or visit cybercrime.gov.in to report the incident and freeze fraudulent transactions within the golden hour.',
     tag: 'Emergency Help',
   },
 ];
 
-export const CyberSafetyTips: React.FC = () => {
+interface CyberSafetyTipsProps {
+  onOpenDetails?: () => void;
+}
+
+export const CyberSafetyTips: React.FC<CyberSafetyTipsProps> = ({ onOpenDetails }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -145,6 +149,66 @@ export const CyberSafetyTips: React.FC = () => {
             }}
           />
         ))}
+      </div>
+
+      {/* Cyber Crime Helpline Number in GK Card */}
+      <div
+        style={{
+          marginTop: '0.95rem',
+          paddingTop: '0.75rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div
+            style={{
+              background: 'rgba(239, 68, 68, 0.15)',
+              color: '#ef4444',
+              borderRadius: '0.4rem',
+              padding: '0.3rem 0.55rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+            }}
+          >
+            <PhoneCall size={14} />
+            <span>Cyber Crime Helpline: 1930</span>
+          </div>
+          <span style={{ fontSize: '0.775rem', color: '#94a3b8' }}>
+            Portal: <strong style={{ color: '#cbd5e1' }}>cybercrime.gov.in</strong>
+          </span>
+        </div>
+
+        {onOpenDetails && (
+          <button
+            onClick={onOpenDetails}
+            style={{
+              background: 'rgba(59, 130, 246, 0.12)',
+              border: '1px solid rgba(59, 130, 246, 0.25)',
+              color: '#93c5fd',
+              borderRadius: '0.4rem',
+              padding: '0.25rem 0.55rem',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span>Official Guide</span>
+            <ExternalLink size={12} />
+          </button>
+        )}
       </div>
     </div>
   );

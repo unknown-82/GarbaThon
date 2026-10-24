@@ -431,8 +431,141 @@ app.get('/api/demo-calls', (req, res) => {
       ]
     },
     {
+      id: 'fake_scene',
+      title: 'Fake Scene (Emergency / Crash Extortion Scam)',
+      language: 'English / Hindi',
+      type: 'SCAM',
+      duration: '38s',
+      audioFile: '/audio/fake_scene.wav',
+      description: 'Scammer fabricates an emergency car crash and police detention scene, threatening imminent criminal FIR and demanding urgent money transfer.',
+      expectedRedFlags: [
+        'AUTHORITY_IMPERSONATION',
+        'THREAT_ARREST',
+        'URGENCY',
+        'MONEY_TRANSFER',
+        'SECRECY_ISOLATION',
+      ],
+      simulationCues: [
+        {
+          atSecond: 4,
+          transcript: "Attention! This is an urgent emergency alert. I am calling from the police checkpost and trauma center.",
+          result: {
+            risk_level: "SUSPICIOUS",
+            score: 50,
+            red_flags: [
+              { type: "AUTHORITY_IMPERSONATION", evidence: "Calling from police checkpost and trauma center" },
+              { type: "URGENCY", evidence: "Urgent emergency alert" }
+            ],
+            reason_en: "Caller fabricates a police emergency scenario to incite immediate fear.",
+            advice_en: "Stay calm. Do not trust unknown callers claiming family emergencies.",
+            reason_gu: "કોલ કરનાર પોલીસ ચેકપોસ્ટ અને હોસ્પિટલના નામે ડરાવવાનો પ્રયાસ કરે છે.",
+            reason_hi: "फोन करने वाला पुलिस और हॉस्पिटल के नाम पर डर पैदा कर रहा है।",
+            advice_gu: "શાંત રહો. પહેલા પોતાના પરિવારજનોને સીધો ફોન કરીને તપાસ કરો.",
+            advice_hi: "शांत रहें। पहले अपने परिजन को सीधे फोन करके सच्चाई पता करें।"
+          }
+        },
+        {
+          atSecond: 16,
+          transcript: "Your son was involved in a severe car crash scene and two people are badly injured. The police are filing an immediate criminal FIR against him!",
+          result: {
+            risk_level: "SCAM",
+            score: 85,
+            red_flags: [
+              { type: "AUTHORITY_IMPERSONATION", evidence: "Police checkpost and trauma center" },
+              { type: "THREAT_ARREST", evidence: "Filing an immediate criminal FIR against him" },
+              { type: "URGENCY", evidence: "Severe car crash scene, immediate criminal FIR" }
+            ],
+            reason_en: "Classic 'Fake Scene' emergency scam fabricating family accident and arrest threats.",
+            advice_en: "Do not panic! Immediately hang up and call your son or relative directly.",
+            reason_gu: "આ ફેક સીન / બોગસ અકસ્માત સ્કેમ છે. પરિવારજનની ધરપકડનો ડર બતાવી પૈસા પડાવવાનો પ્રયાસ છે.",
+            reason_hi: "यह 'फेक सीन' इमरजेंसी फ्रॉड है। झूठे एक्सीडेंट का डर दिखाकर वसूली की जा रही है।",
+            advice_gu: "ગભરાશો નહીં! ફોન કાપીને તમારા દીકરાને સીધો કોલ કરો.",
+            advice_hi: "घबराएं नहीं! तुरंत फोन काटकर अपने बेटे को सीधे कॉल करें।"
+          }
+        },
+        {
+          atSecond: 28,
+          transcript: "If you want to stop his immediate arrest and start treatment, you must transfer ₹45,000 right now! Do not hang up or call anyone else!",
+          result: {
+            risk_level: "SCAM",
+            score: 98,
+            red_flags: [
+              { type: "AUTHORITY_IMPERSONATION", evidence: "Police checkpost" },
+              { type: "THREAT_ARREST", evidence: "Stop his immediate arrest" },
+              { type: "URGENCY", evidence: "Transfer ₹45,000 right now" },
+              { type: "MONEY_TRANSFER", evidence: "Transfer ₹45,000 right now to this emergency verification UPI ID" },
+              { type: "SECRECY_ISOLATION", evidence: "Do not hang up or call anyone else" }
+            ],
+            reason_en: "Definite extortion fraud! Caller demands immediate ₹45,000 UPI transfer and commands isolation.",
+            advice_en: "Hang up immediately! Never transfer money. Report fraud to Cyber Crime at 1930.",
+            reason_gu: "૧૦૦% છેતરપિંડી! તાત્કાલિક UPI દ્વારા ₹૪૫,૦૦૦ માંગવામાં આવે છે અને કોઈને ન જણાવવા દબાણ થાય છે.",
+            reason_hi: "100% साइबर वसूली! ₹45,000 यूपीआई ट्रांसफर मांगा जा रहा है और किसी को न बताने का दबाव है।",
+            advice_gu: "તાત્કાલિક ફોન કાપી નાખો! ૧ રૂપિયો પણ ન મોકલો.",
+            advice_hi: "तुरंत फोन काट दें! एक रुपया भी न भेजें।"
+          }
+        }
+      ]
+    },
+    {
+      id: 'no_scam_call',
+      title: 'No Scam Call (Safe Family Conversation)',
+      language: 'English',
+      type: 'SAFE',
+      duration: '30s',
+      audioFile: '/audio/no_scam_call.wav',
+      description: 'A completely safe, everyday family conversation between mother and adult child with zero scam indicators.',
+      expectedRedFlags: [],
+      simulationCues: [
+        {
+          atSecond: 4,
+          transcript: "Hello Mom, good morning! How are you doing today? I am calling from the office.",
+          result: {
+            risk_level: "SAFE",
+            score: 0,
+            red_flags: [],
+            reason_en: "Safe family check-in call from office. Zero threats or fraud indicators.",
+            advice_en: "Call is completely safe to continue.",
+            reason_gu: "સુરક્ષિત કૌટુંબિક વાતચીત છે. કોઈ જોખમ નથી.",
+            reason_hi: "सुरक्षित पारिवारिक बातचीत। कोई खतरा नहीं है।",
+            advice_gu: "કૉલ સંપૂર્ણપણે સલામત છે.",
+            advice_hi: "कॉल पूरी तरह सुरक्षित है।"
+          }
+        },
+        {
+          atSecond: 14,
+          transcript: "I wanted to let you know that I will pick up your medicines on my way home this evening. Are you preparing the sweets for the festival this weekend?",
+          result: {
+            risk_level: "SAFE",
+            score: 0,
+            red_flags: [],
+            reason_en: "Routine conversation about picking up medications and weekend festival sweets.",
+            advice_en: "Safe call. No risk detected.",
+            reason_gu: "દવાઓ અને તહેવારની સામાન્ય વાતચીત છે. કોઈ શંકાસ્પદ લક્ષણ નથી.",
+            reason_hi: "दवाइयों और त्योहार की सामान्य बातचीत। कोई संदिग्ध बात नहीं है।",
+            advice_gu: "સુરક્ષિત કૉલ છે (Safe).",
+            advice_hi: "सुरक्षित कॉल (Safe)।"
+          }
+        },
+        {
+          atSecond: 24,
+          transcript: "We will visit you on Sunday afternoon for lunch. Take care of yourself, see you soon!",
+          result: {
+            risk_level: "SAFE",
+            score: 0,
+            red_flags: [],
+            reason_en: "Family lunch plans confirmed. Zero scam risk.",
+            advice_en: "Safe call. Continue normally.",
+            reason_gu: "૧૦૦% સુરક્ષિત કૉલ છે. કોઈ જોખમ નથી.",
+            reason_hi: "100% सुरक्षित कॉल। कोई खतरा नहीं है।",
+            advice_gu: "કોઈપણ ચિંતા વિના વાત કરો.",
+            advice_hi: "बिना किसी चिंता के बात जारी रखें।"
+          }
+        }
+      ]
+    },
+    {
       id: 'genuine_call',
-      title: 'Genuine Family Call (પરિવારનો સાચો કૉલ / परिवार का सुरक्षित कॉल)',
+      title: 'Genuine Family Call (No Scam)',
       language: 'Gujarati',
       type: 'SAFE',
       duration: '35s',

@@ -46,32 +46,39 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
 
   const sampleCalls = [
     {
+      name: 'Fake_Scene_Emergency_Scam.wav',
+      url: '/audio/fake_scene.wav',
+      label: '🚨 Fake Scene (Scam)',
+      category: 'Crash / Detention Extortion',
+      language: 'English/Hindi',
+    },
+    {
+      name: 'No_Scam_Family_Call.wav',
+      url: '/audio/no_scam_call.wav',
+      label: '🟢 No Scam Call (Safe)',
+      category: 'Safe Family Conversation',
+      language: 'Safe',
+    },
+    {
       name: 'Gujarati_Bank_KYC_Scam.wav',
       url: '/audio/scam_fake_kyc.wav',
-      label: '🚨 Fake Bank KYC (Gujarati)',
-      category: 'Banking / OTP Fraud',
+      label: '🚨 Fake Bank KYC',
+      category: 'OTP Fraud',
       language: 'Gujarati',
     },
     {
       name: 'Hindi_Digital_Arrest_Scam.wav',
       url: '/audio/scam_digital_arrest.wav',
-      label: '🚨 Digital Arrest (Hindi)',
+      label: '🚨 Digital Arrest',
       category: 'Police Impersonation',
       language: 'Hindi',
     },
     {
       name: 'English_Customs_Courier_Scam.wav',
       url: '/audio/scam_courier.wav',
-      label: '🚨 Customs Courier (English)',
-      category: 'Contraband / Parcel FIR',
+      label: '🚨 Customs Courier',
+      category: 'Parcel FIR',
       language: 'English',
-    },
-    {
-      name: 'Genuine_Family_Call.wav',
-      url: '/audio/genuine_call.wav',
-      label: '🟢 Genuine Call (Safe)',
-      category: 'Normal Conversation',
-      language: 'Family',
     },
   ];
 
