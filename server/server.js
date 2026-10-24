@@ -238,6 +238,8 @@ app.get('/api/demo-calls', (req, res) => {
             red_flags: [
               { type: "AUTHORITY_IMPERSONATION", evidence: "मैं इंस्पेक्टर विक्रम राठौड़ बोल रहा हूँ, मुंबई क्राइम ब्रांच और सीबीआई स्पेशल सेल से।" }
             ],
+            reason_en: "The caller falsely claims to be a senior police officer from Mumbai Crime Branch & CBI.",
+            advice_en: "Be cautious. Genuine police never initiate interrogations from private mobile numbers.",
             reason_gu: "કોલ કરનાર વ્યક્તિ મુંબઈ ક્રાઇમ બ્રાન્ચ અને CBI ના પોલીસ અધિકારી હોવાનો દાવો કરી રહ્યો છે.",
             reason_hi: "फोन करने वाला खुद को मुंबई क्राइम ब्रांच और सीबीआई का पुलिस अधिकारी बता रहा है।",
             advice_gu: "સાવધાન રહો. અજાણ્યા નંબર પરથી પોલીસ ક્યારેય ફોન પર ધમકી નથી આપતી.",
@@ -255,6 +257,8 @@ app.get('/api/demo-calls', (req, res) => {
               { type: "THREAT_ARREST", evidence: "140 ग्राम ड्रग्स मिले हैं, आपका अरेस्ट वारंट जारी हो चुका है।" },
               { type: "URGENCY", evidence: "तुरंत वीडियो कॉल पर आइए वरना लोकल पुलिस टीम आपके घर आ रही है।" }
             ],
+            reason_en: "Classic 'Digital Arrest' scam. Fraudsters fabricate illegal narcotics parcel and fake arrest warrants to induce panic.",
+            advice_en: "Hang up immediately! Never join Skype video calls with unknown callers or share IDs.",
             reason_gu: "આ જાણીતો 'ડિજિટલ એરેસ્ટ' સ્કેમ છે. પોલીસ કે કસ્ટમ્સ ક્યારેય ફોન કે વીડિયો પર ધરપકડ નથી કરતી.",
             reason_hi: "यह 'डिजिटल अरेस्ट' का खतरनाक फ्रॉड है। पुलिस कभी फोन या वीडियो कॉल पर अरेस्ट नहीं करती।",
             advice_gu: "તરત જ ફોન કાપી નાખો! કોઈ વીડિયો કોલ ન કરો અને સ્થાનિક પોલીસ હેલ્પલાઇન ૧૯૩૦ પર સંપર્ક કરો.",
@@ -273,6 +277,8 @@ app.get('/api/demo-calls', (req, res) => {
               { type: "MONEY_TRANSFER", evidence: "आरबीआई वेरिफिकेशन एकाउंट में ₹50,000 तुरंत ट्रांसफर कीजिए" },
               { type: "SECRECY_ISOLATION", evidence: "कमरे का दरवाजा बंद रखें और किसी को मत बताइए" }
             ],
+            reason_en: "Severe extortion attempt! The caller demands a ₹50,000 transfer under threat of 'Digital Arrest', which does not exist in law.",
+            advice_en: "Report immediately to Cyber Crime Helpline 1930! Never transfer any money.",
             reason_gu: "ખૂબ જ ખતરનાક ફ્રોડ! કાયદામાં 'ડિજિટલ એરેસ્ટ' જેવો કોઈ નિયમ નથી. તેઓ પૈસા પડાવવા ધમકી આપી રહ્યા છે.",
             reason_hi: "गंभीर वित्तीय धोखाधड़ी! भारत में 'डिजिटल अरेस्ट' नाम का कोई कानून नहीं है। यह पैसे ऐंठने की साजिश है।",
             advice_gu: "તાત્કાલિક ફોન કટ કરો! એક રૂપિયો પણ મોકલશો નહીં. પરિવારજનોને જાણ કરો.",
@@ -305,6 +311,8 @@ app.get('/api/demo-calls', (req, res) => {
             red_flags: [
               { type: "AUTHORITY_IMPERSONATION", evidence: "હું સ્ટેટ બેંક ઓફ ઇન્ડિયા (SBI) ના હેડ ઓફિસ વેરિફિકેશન ડિપાર્ટમેન્ટમાંથી બોલું છું." }
             ],
+            reason_en: "Caller is impersonating an official from the State Bank of India (SBI) Head Office.",
+            advice_en: "Bank officials never call from personal mobile numbers to verify personal accounts.",
             reason_gu: "કોલ કરનાર વ્યક્તિ SBI બેંકના મુખ્ય અધિકારી હોવાનો દાવો કરી રહ્યો છે.",
             reason_hi: "फोन करने वाला व्यक्ति खुद को स्टेट बैंक ऑफ इंडिया का अधिकारी बता रहा है।",
             advice_gu: "સાવચેત રહો. બેંકના અધિકારીઓ ક્યારેય વ્યક્તિગત નંબર પરથી કૉલ કરતા નથી.",
@@ -322,6 +330,8 @@ app.get('/api/demo-calls', (req, res) => {
               { type: "URGENCY", evidence: "આગામી ૨ કલાકમાં તમારું બેંક એકાઉન્ટ અને એટીએમ બ્લોક થઈ જશે" },
               { type: "PERSONAL_DATA", evidence: "તાત્કાલિક તમારો આધાર નંબર અને પાન કાર્ડ નંબર આપો" }
             ],
+            reason_en: "Urgent threat of account deactivation used to illegally extract Aadhaar and PAN card details.",
+            advice_en: "Do not provide any documents over phone. Visit your local bank branch directly.",
             reason_gu: "બેંક એકાઉન્ટ બ્લોક કરવાની ધમકી આપીને અંગત માહિતી મેળવવાનો આ સ્કેમ છે.",
             reason_hi: "बैंक खाता ब्लॉक करने की झूठी जल्दी दिखाकर निजी दस्तावेज मांगे जा रहे हैं।",
             advice_gu: "કોઈપણ દસ્તાવેજ આપશો નહીં. તમારી નજીકની બેંક શાખામાં જાતે જઈને તપાસ કરો.",
@@ -339,6 +349,8 @@ app.get('/api/demo-calls', (req, res) => {
               { type: "URGENCY", evidence: "તાત્કાલિક બોલો, નહીંતર પેનલ્ટી લાગશે" },
               { type: "AUTHORITY_IMPERSONATION", evidence: "SBI બેંક અધિકારી" }
             ],
+            reason_en: "Critical fraud! Demand for a 6-digit SMS OTP is 100% scam. Sharing OTP will immediately siphon your bank funds.",
+            advice_en: "Never share OTP with anyone! Contact your bank immediately and dial 1930.",
             reason_gu: "સાવધાન! ઓટીપી (OTP) માંગવો એ ૧૦૦% છેતરપિંડી છે. ઓટીપી આપતાં જ તમારા ખાતામાંથી પૈસા ઉપડી જશે.",
             reason_hi: "अलर्ट! बैंक कभी भी ओटीपी (OTP) नहीं मांगता। ओटीपी बताते ही खाते से पैसे कट जाएंगे।",
             advice_gu: "તરત જ ફોન કાપી નાખો! કોઈને પણ ઓટીપી ક્યારેય ન આપો.",
@@ -371,6 +383,8 @@ app.get('/api/demo-calls', (req, res) => {
             red_flags: [
               { type: "AUTHORITY_IMPERSONATION", evidence: "FedEx International Express / Customs Officer" }
             ],
+            reason_en: "Automated robocall falsely claiming an international shipment contains seized contraband.",
+            advice_en: "Legitimate courier companies never connect calls directly to customs officers via IVR.",
             reason_gu: "ઇન્ટરનેશનલ કુરિયર કંપનીના નામે ઓટોમેટેડ ફેક કોલ આવી રહ્યો છે.",
             reason_hi: "फेडेक्स कूरियर के नाम से फर्जी ऑटोमेटेड कॉल की जा रही है।",
             advice_gu: "કુરિયર કંપનીઓ ક્યારેય આ રીતે ફોન કરીને કસ્ટમ્સ અધિકારી સાથે કનેક્ટ નથી કરતી.",
@@ -387,6 +401,8 @@ app.get('/api/demo-calls', (req, res) => {
               { type: "AUTHORITY_IMPERSONATION", evidence: "Customs Officer Shinde / Anti-Narcotics cell" },
               { type: "THREAT_ARREST", evidence: "Your parcel contains 5 fake passports and synthetic drugs, FIR filed against you" }
             ],
+            reason_en: "False allegations of drug smuggling and forged passports used to intimidate and extort victims.",
+            advice_en: "Do not panic or share your Aadhaar details. Real customs authorities send formal physical summons.",
             reason_gu: "કુરિયરમાં ડ્રગ્સ મળ્યા હોવાનો ખોટો આરોપ લગાવીને ડરાવવાનો આ સાયબર ફ્રોડ છે.",
             reason_hi: "पार्सल में नशीले पदार्थ होने का झूठा डर दिखाकर एफआईआर की धमकी दी जा रही है।",
             advice_gu: "ગભરાશો નહીં. તરત જ કૉલ ડિસ્કનેક્ટ કરો અને કોઈ અંગત વિગતો આપશો નહીં.",
@@ -404,6 +420,8 @@ app.get('/api/demo-calls', (req, res) => {
               { type: "URGENCY", evidence: "Right now to clear your name from terrorist list" },
               { type: "THREAT_ARREST", evidence: "Clear your name from terrorist watch list" }
             ],
+            reason_en: "Brazen money extortion! Fraudster demands ₹35,000 transfer to an unofficial UPI ID under terrorist threats.",
+            advice_en: "Never transfer money to any UPI ID! Report immediately to the National Cyber Crime Helpline at 1930.",
             reason_gu: "સરકારી એકાઉન્ટના નામે UPI ટ્રાન્સફર માંગવામાં આવી રહી છે. આ ૧૦૦% છેતરપિંડી છે.",
             reason_hi: "सरकारी वेरीफिकेशन के नाम पर यूपीआई से पैसे ट्रांसफर करने को कहा जा रहा है। यह फ्रॉड है।",
             advice_gu: "એક પણ રૂપિયો ટ્રાન્સફર કરશો નહીં! તાત્કાલિક ફોન કાપો.",
@@ -429,6 +447,8 @@ app.get('/api/demo-calls', (req, res) => {
             risk_level: "SAFE",
             score: 2,
             red_flags: [],
+            reason_en: "This is a genuine, loving family phone call between son and mother discussing health and family medications.",
+            advice_en: "Call is completely safe to continue.",
             reason_gu: "આ સંપૂર્ણપણે સુરક્ષિત પરિવારનો ફોન કોલ છે. દીકરો મમ્મી અને બાપુજીની તબિયત અને દવા વિશે પૂછી રહ્યો છે.",
             reason_hi: "यह परिवार का सुरक्षित सामान्य कॉल है। बेटा माता-पिता की सेहत और दवाइयों के बारे में पूछ रहा है।",
             advice_gu: "કોઈપણ ચિંતા કરવાની જરૂર નથી. કૉલ સંપૂર્ણપણે સલામત છે.",
@@ -442,6 +462,8 @@ app.get('/api/demo-calls', (req, res) => {
             risk_level: "SAFE",
             score: 1,
             red_flags: [],
+            reason_en: "Conversation is about festive sweets (mohanthal and sukhdi) and weekend family lunch. Zero scam patterns.",
+            advice_en: "Safe call. No risk detected.",
             reason_gu: "તહેવારની મીઠાઈ અને રવિવારે જમવા આવવાની સ્નેહભરી વાતો થઈ રહી છે. કોઈ શંકાસ્પદ વાત નથી.",
             reason_hi: "त्योहार की मिठाइयों और रविवार को परिवार के साथ भोजन करने की बात हो रही है। कोई संदिग्ध बात नहीं है।",
             advice_gu: "સુરક્ષિત કૉલ છે (Safe). આરામથી વાતચીત ચાલુ રાખો.",

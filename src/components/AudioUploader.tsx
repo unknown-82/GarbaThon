@@ -45,10 +45,34 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
   };
 
   const sampleCalls = [
-    { name: 'Digital Arrest Scam.wav', url: '/audio/scam_digital_arrest.wav', label: 'Sample: Digital Arrest Scam' },
-    { name: 'Fake Bank KYC Scam.wav', url: '/audio/scam_fake_kyc.wav', label: 'Sample: Fake Bank KYC Scam' },
-    { name: 'Fake Courier Scam.wav', url: '/audio/scam_courier.wav', label: 'Sample: Courier Customs Scam' },
-    { name: 'Genuine Safe Call.wav', url: '/audio/genuine_call.wav', label: 'Sample: Genuine Safe Call' },
+    {
+      name: 'Gujarati_Bank_KYC_Scam.wav',
+      url: '/audio/scam_fake_kyc.wav',
+      label: '🚨 Fake Bank KYC (Gujarati)',
+      category: 'Banking / OTP Fraud',
+      language: 'Gujarati',
+    },
+    {
+      name: 'Hindi_Digital_Arrest_Scam.wav',
+      url: '/audio/scam_digital_arrest.wav',
+      label: '🚨 Digital Arrest (Hindi)',
+      category: 'Police Impersonation',
+      language: 'Hindi',
+    },
+    {
+      name: 'English_Customs_Courier_Scam.wav',
+      url: '/audio/scam_courier.wav',
+      label: '🚨 Customs Courier (English)',
+      category: 'Contraband / Parcel FIR',
+      language: 'English',
+    },
+    {
+      name: 'Genuine_Family_Call.wav',
+      url: '/audio/genuine_call.wav',
+      label: '🟢 Genuine Call (Safe)',
+      category: 'Normal Conversation',
+      language: 'Family',
+    },
   ];
 
   return (
@@ -138,12 +162,17 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
             onClick={() => onFileSelected({ name: sample.name, url: sample.url })}
             style={{
               fontSize: '0.75rem',
-              padding: '0.3rem 0.6rem',
+              padding: '0.35rem 0.7rem',
               background: currentFileName === sample.name ? 'rgba(59, 130, 246, 0.2)' : undefined,
               borderColor: currentFileName === sample.name ? '#3b82f6' : undefined,
+              display: 'inline-flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '0.1rem',
             }}
           >
-            {sample.label}
+            <span style={{ fontWeight: 700 }}>{sample.label}</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{sample.category}</span>
           </button>
         ))}
       </div>
