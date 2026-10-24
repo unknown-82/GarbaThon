@@ -1,20 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { MessageSquare, Mic } from 'lucide-react';
-import { AppLanguage } from '../types/scam';
-import { translations } from '../translations/i18n';
 
 interface LiveTranscriptProps {
   transcript: string;
-  language: AppLanguage;
   isListening: boolean;
 }
 
 export const LiveTranscript: React.FC<LiveTranscriptProps> = ({
   transcript,
-  language,
   isListening,
 }) => {
-  const t = translations[language];
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -30,7 +25,7 @@ export const LiveTranscript: React.FC<LiveTranscriptProps> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <MessageSquare size={20} color="#60a5fa" />
-          {t.transcriptTitle}
+          Live Call Transcript
         </h3>
         {isListening && (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#4ade80', fontWeight: 600 }}>
@@ -42,11 +37,11 @@ export const LiveTranscript: React.FC<LiveTranscriptProps> = ({
       <div ref={boxRef} className="transcript-box">
         {lines.length === 0 ? (
           <p style={{ color: 'var(--text-muted)', fontStyle: 'italic', padding: '1rem 0' }}>
-            {t.transcriptListening}
+            Upload and play an audio file to see the real-time transcript here...
           </p>
         ) : (
           lines.map((line, idx) => {
-            const isCaller = line.startsWith('Caller:') || line.startsWith('ઇન્સ્પેક્ટર') || line.startsWith('હું') || line.startsWith('नमस्ते') || line.startsWith('Attention');
+            const isCaller = line.startsWith('Caller:') || line.startsWith('Inspector') || line.startsWith('This is');
             return (
               <div
                 key={idx}

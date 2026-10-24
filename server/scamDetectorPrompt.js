@@ -55,6 +55,14 @@ export const REPORT_CALL_RISK_TOOL = {
           required: ['type', 'evidence'],
         },
       },
+      reason_en: {
+        type: 'STRING',
+        description: 'Clear English explanation of why this call is a scam or safe',
+      },
+      advice_en: {
+        type: 'STRING',
+        description: 'Direct actionable safety advice in English (e.g., Hang up immediately, do not share OTP)',
+      },
       reason_gu: {
         type: 'STRING',
         description: 'Simple Gujarati explanation written for elders explaining why this call is risky or safe',
@@ -76,10 +84,8 @@ export const REPORT_CALL_RISK_TOOL = {
       'risk_level',
       'score',
       'red_flags',
-      'reason_gu',
-      'reason_hi',
-      'advice_gu',
-      'advice_hi',
+      'reason_en',
+      'advice_en',
     ],
   },
 };

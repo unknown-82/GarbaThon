@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, PhoneOff, Volume2, Radio } from 'lucide-react';
-import { AppLanguage } from '../types/scam';
-import { translations } from '../translations/i18n';
+import { Play, Pause, RotateCcw, PhoneOff, Radio } from 'lucide-react';
 import { AudioStreamer } from '../audio/audioStreamer';
 
 interface AudioVisualizerProps {
@@ -13,7 +11,6 @@ interface AudioVisualizerProps {
   onPause: () => void;
   onReset: () => void;
   onHangUp: () => void;
-  language: AppLanguage;
   disabled?: boolean;
 }
 
@@ -26,10 +23,8 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
   onPause,
   onReset,
   onHangUp,
-  language,
   disabled,
 }) => {
-  const t = translations[language];
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
@@ -50,7 +45,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
       const height = canvas.height;
       ctx.clearRect(0, 0, width, height);
 
-      // Draw background line
+      // Draw background
       ctx.fillStyle = 'rgba(15, 23, 42, 0.4)';
       ctx.fillRect(0, 0, width, height);
 
@@ -60,7 +55,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
       for (let i = 0; i < bufferLength; i++) {
         const barHeight = isPlaying ? (dataArray[i] / 255) * height * 0.85 + 4 : 4;
 
-        // Gradient for telephone audio bars
+        // Gradient for audio bars
         const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height);
         gradient.addColorStop(0, '#60a5fa');
         gradient.addColorStop(1, '#1d4ed8');
@@ -95,7 +90,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <Radio size={18} color={isPlaying ? '#34d399' : '#94a3b8'} className={isPlaying ? 'pulse-dot' : ''} />
           <span style={{ fontSize: '0.9rem', fontWeight: 600, color: isPlaying ? '#34d399' : 'var(--text-secondary)' }}>
-            {isPlaying ? t.liveCallMonitoring : 'Audio player ready'}
+            {isPlaying ? 'AI Monitoring Call Audio Stream...' : 'Audio Ready'}
           </span>
         </div>
         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
@@ -127,23 +122,23 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
               style={{ opacity: disabled ? 0.6 : 1 }}
             >
               <Play size={20} fill="currentColor" />
-              <span>{t.playCall}</span>
+              <span>Play Call</span>
             </button>
           ) : (
             <button className="btn-primary" onClick={onPause} style={{ background: '#f59e0b' }}>
               <Pause size={20} fill="currentColor" />
-              <span>{t.pauseCall}</span>
+              <span>Pause Call</span>
             </button>
           )}
 
           <button
             className="toggle-btn"
             onClick={onReset}
-            title={t.restartCall}
+            title="Restart playback"
             disabled={disabled}
           >
             <RotateCcw size={16} />
-            <span>{t.restartCall}</span>
+            <span>Restart</span>
           </button>
         </div>
 
@@ -155,7 +150,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
           style={{ opacity: !isPlaying ? 0.4 : 1 }}
         >
           <PhoneOff size={18} />
-          <span>{t.hangUpCall}</span>
+          <span>Hang Up (Disconnect)</span>
         </button>
       </div>
     </div>

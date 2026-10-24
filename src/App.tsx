@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
-  AppLanguage,
   CallRiskReport,
-  DemoCall,
   LiveConnectionStatus,
-  RiskLevel,
 } from './types/scam';
-import { translations } from './translations/i18n';
 import { RiskEngine } from './live/riskEngine';
 import { AudioStreamer } from './audio/audioStreamer';
 import { GeminiLiveClient } from './live/geminiLiveClient';
 import { FallbackDetector } from './live/fallbackDetector';
 
 import { Navbar } from './components/Navbar';
-import { CallPicker } from './components/CallPicker';
+import { AudioUploader } from './components/AudioUploader';
 import { AudioVisualizer } from './components/AudioVisualizer';
 import { RiskMeter } from './components/RiskMeter';
 import { RedFlagChips } from './components/RedFlagChips';
@@ -22,11 +18,7 @@ import { ScamAlertModal } from './components/ScamAlertModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 
 export const App: React.FC = () => {
-  const [language, setLanguage] = useState<AppLanguage>('gu');
-  const [elderMode, setElderMode] = useState<boolean>(true);
-  const [demoCalls, setDemoCalls] = useState<DemoCall[]>([]);
-  const [selectedCall, setSelectedCall] = useState<DemoCall | null>(null);
-
+  const [currentFileName, setCurrentFileName] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -47,10 +39,8 @@ export const App: React.FC = () => {
     risk_level: 'SAFE',
     score: 0,
     red_flags: [],
-    reason_gu: 'કૉલ શરૂ થવાની રાહ જોવાઈ રહી છે...',
-    reason_hi: 'कॉल शुरू होने की प्रतीक्षा की जा रही है...',
-    advice_gu: 'કૉલ શરૂ કરો અને તપાસ જુઓ.',
-    advice_hi: 'कॉल शुरू करें और जांच देखें।',
+    reason_en: 'Upload a phone call recording to begin scam detection.',
+    advice_en: 'Audio will be analyzed in real time as it plays.',
   });
 
   // Core engines
@@ -92,43 +82,21 @@ export const App: React.FC = () => {
     [riskEngine]
   );
 
-  // Synchronize Elder Mode body class
-  useEffect(() => {
-    if (elderMode) {
-      document.body.classList.add('elder-mode');
-    } else {
-      document.body.classList.remove('elder-mode');
-    }
-  }, [elderMode]);
-
-  // Fetch backend config and demo calls on mount
-  const checkConfigAndDemos = async () => {
+  // Fetch backend config on mount
+  const checkConfig = async () => {
     try {
-      const [configResp, demosResp] = await Promise.all([
-        fetch('/api/config').catch(() => null),
-        fetch('/api/demo-calls').catch(() => null),
-      ]);
-
+      const configResp = await fetch('/api/config').catch(() => null);
       if (configResp && configResp.ok) {
         const configData = await configResp.json();
         setHasApiKey(configData.hasApiKey);
       }
-
-      if (demosResp && demosResp.ok) {
-        const demosData = await demosResp.json();
-        setDemoCalls(demosData);
-        if (demosData.length > 0 && !selectedCall) {
-          setSelectedCall(demosData[0]);
-          fallbackDetector.setDemoCall(demosData[0]);
-        }
-      }
     } catch (err) {
-      console.error('Failed to load initial server config:', err);
+      console.error('Failed to load server config:', err);
     }
   };
 
   useEffect(() => {
-    checkConfigAndDemos();
+    checkConfig();
   }, []);
 
   // Configure AudioStreamer callbacks
@@ -140,12 +108,12 @@ export const App: React.FC = () => {
           liveClient.sendAudioFrame(base64Pcm);
         }
       },
-      onChunkStart: (chunkIndex) => {
+      onChunkStart: () => {
         if (liveClient.getIsConnected()) {
           liveClient.sendActivityStart();
         }
       },
-      onChunkEnd: (chunkIndex, cumulativeDuration) => {
+      onChunkEnd: (chunkIndex) => {
         if (liveClient.getIsConnected()) {
           liveClient.sendActivityEnd();
         } else if (hasApiKey) {
@@ -156,7 +124,7 @@ export const App: React.FC = () => {
       onPlaybackProgress: (curTime, dur) => {
         setCurrentTime(curTime);
         setTotalDuration(dur);
-        // If in simulation mode, check cue triggers
+        // If in simulation mode, check cues
         fallbackDetector.checkSimulationCues(curTime);
       },
       onPlaybackEnded: () => {
@@ -164,53 +132,6 @@ export const App: React.FC = () => {
       },
     });
   }, [audioStreamer, liveClient, fallbackDetector, hasApiKey, transcript]);
-
-  // Select a phone call
-  const handleSelectCall = async (call: DemoCall) => {
-    audioStreamer.stop();
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setSelectedCall(call);
-    fallbackDetector.setDemoCall(call);
-    resetAnalysis();
-
-    try {
-      const dur = await audioStreamer.loadAudio(call.audioFile);
-      setTotalDuration(dur);
-    } catch (err) {
-      console.error('Failed to preload audio:', err);
-    }
-  };
-
-  // Upload custom audio file
-  const handleCustomAudioUpload = async (file: File) => {
-    audioStreamer.stop();
-    setIsPlaying(false);
-    setCurrentTime(0);
-
-    const arrayBuffer = await file.arrayBuffer();
-    const customCall: DemoCall = {
-      id: `custom_${Date.now()}`,
-      title: `Custom: ${file.name}`,
-      language: 'Unknown',
-      type: 'SCAM',
-      duration: 'Custom',
-      audioFile: '',
-      description: 'User uploaded audio file for real-time scam detection.',
-      expectedRedFlags: [],
-    };
-
-    setSelectedCall(customCall);
-    fallbackDetector.setDemoCall(customCall);
-    resetAnalysis();
-
-    try {
-      const dur = await audioStreamer.loadAudio(arrayBuffer);
-      setTotalDuration(dur);
-    } catch (err) {
-      alert(`Could not decode audio: ${err}`);
-    }
-  };
 
   const resetAnalysis = () => {
     riskEngine.reset();
@@ -221,30 +142,66 @@ export const App: React.FC = () => {
       risk_level: 'SAFE',
       score: 0,
       red_flags: [],
-      reason_gu: 'કૉલ શરૂ થવાની રાહ જોવાઈ રહી છે...',
-      reason_hi: 'कॉल शुरू होने की प्रतीक्षा की जा रही है...',
-      advice_gu: 'કૉલ શરૂ કરો અને તપાસ જુઓ.',
-      advice_hi: 'कॉल शुरू करें और जांच देखें।',
+      reason_en: 'Audio loaded. Press play to start real-time scam detection.',
+      advice_en: 'Listen to the audio as the AI evaluates red flags.',
     });
   };
 
-  // Play handler
-  const handlePlay = async () => {
-    if (!selectedCall) return;
+  // Upload or select audio file
+  const handleFileSelected = async (fileOrUrl: File | { name: string; url: string }) => {
+    audioStreamer.stop();
+    setIsPlaying(false);
+    setCurrentTime(0);
+    resetAnalysis();
 
-    // Connect Live API if key is present and not connected yet
+    try {
+      let dur = 0;
+      if ('url' in fileOrUrl) {
+        setCurrentFileName(fileOrUrl.name);
+
+        // Find matching demo if from built-in samples for offline simulation cues
+        try {
+          const resp = await fetch('/api/demo-calls');
+          const demos = await resp.json();
+          const matched = demos.find((d: any) => d.audioFile === fileOrUrl.url);
+          if (matched) {
+            fallbackDetector.setDemoCall(matched);
+          } else {
+            fallbackDetector.setDemoCall(null);
+          }
+        } catch {
+          fallbackDetector.setDemoCall(null);
+        }
+
+        dur = await audioStreamer.loadAudio(fileOrUrl.url);
+      } else {
+        setCurrentFileName(fileOrUrl.name);
+        fallbackDetector.setDemoCall(null);
+        const arrayBuffer = await fileOrUrl.arrayBuffer();
+        dur = await audioStreamer.loadAudio(arrayBuffer);
+      }
+
+      setTotalDuration(dur);
+
+      // Connect to Gemini Live if key is available
+      if (hasApiKey && !liveClient.getIsConnected()) {
+        await liveClient.connect();
+      }
+
+      // Automatically start playback and real-time detection
+      audioStreamer.play(0);
+      setIsPlaying(true);
+    } catch (err: any) {
+      alert(`Could not load audio file: ${err?.message || err}`);
+    }
+  };
+
+  // Manual Play handler
+  const handlePlay = async () => {
+    if (!currentFileName) return;
+
     if (hasApiKey && !liveClient.getIsConnected()) {
       await liveClient.connect();
-    }
-
-    // Ensure audio buffer is loaded
-    if (totalDuration === 0 && selectedCall.audioFile) {
-      try {
-        const dur = await audioStreamer.loadAudio(selectedCall.audioFile);
-        setTotalDuration(dur);
-      } catch (err) {
-        console.error('Error loading audio:', err);
-      }
     }
 
     audioStreamer.play(currentTime);
@@ -265,7 +222,7 @@ export const App: React.FC = () => {
     resetAnalysis();
   };
 
-  // Hang-up handler (Stops audio immediately & closes modal)
+  // Emergency Hang-up handler
   const handleHangUp = () => {
     audioStreamer.stop();
     setIsPlaying(false);
@@ -274,83 +231,73 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Navbar with Elder Mode and Language Toggle */}
+      {/* Clean Navbar */}
       <Navbar
-        language={language}
-        onLanguageChange={setLanguage}
-        elderMode={elderMode}
-        onToggleElderMode={() => setElderMode(!elderMode)}
         status={connectionStatus}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
-      {/* Call Picker */}
-      <CallPicker
-        demoCalls={demoCalls}
-        selectedCall={selectedCall}
-        onSelectCall={handleSelectCall}
-        language={language}
+      {/* Audio Upload Card */}
+      <AudioUploader
+        onFileSelected={handleFileSelected}
+        currentFileName={currentFileName}
+        isPlaying={isPlaying}
         disabled={isPlaying}
-        onCustomAudioUpload={handleCustomAudioUpload}
       />
 
       {/* Main Analysis Dashboard */}
-      <div className="dashboard-grid">
-        {/* Left Column: Player & Live Transcript */}
-        <div>
-          <AudioVisualizer
-            streamer={audioStreamer}
-            isPlaying={isPlaying}
-            currentTime={currentTime}
-            totalDuration={totalDuration}
-            onPlay={handlePlay}
-            onPause={handlePause}
-            onReset={handleReset}
-            onHangUp={handleHangUp}
-            language={language}
-            disabled={!selectedCall}
-          />
+      {currentFileName && (
+        <div className="dashboard-grid">
+          {/* Left Column: Player & Live Transcript */}
+          <div>
+            <AudioVisualizer
+              streamer={audioStreamer}
+              isPlaying={isPlaying}
+              currentTime={currentTime}
+              totalDuration={totalDuration}
+              onPlay={handlePlay}
+              onPause={handlePause}
+              onReset={handleReset}
+              onHangUp={handleHangUp}
+              disabled={!currentFileName}
+            />
 
-          <LiveTranscript
-            transcript={transcript}
-            language={language}
-            isListening={isPlaying}
-          />
+            <LiveTranscript
+              transcript={transcript}
+              isListening={isPlaying}
+            />
+          </div>
+
+          {/* Right Column: Risk Assessment & Red Flags */}
+          <div>
+            <RiskMeter
+              report={riskReport}
+              isLatched={riskEngine.isScamLatched()}
+            />
+
+            <RedFlagChips
+              redFlags={riskReport.red_flags}
+            />
+          </div>
         </div>
+      )}
 
-        {/* Right Column: Risk Meter & Red Flags */}
-        <div>
-          <RiskMeter
-            report={riskReport}
-            language={language}
-            isLatched={riskEngine.isScamLatched()}
-          />
-
-          <RedFlagChips
-            redFlags={riskReport.red_flags}
-            language={language}
-          />
-        </div>
-      </div>
-
-      {/* Full-Screen Scam Alert Modal */}
+      {/* Full-Screen Emergency Scam Alert */}
       <ScamAlertModal
         report={riskReport}
         isOpen={showScamModal}
         onHangUp={handleHangUp}
         onDismiss={() => setShowScamModal(false)}
-        language={language}
-        onLanguageChange={setLanguage}
       />
 
-      {/* API Key & Cloud Settings Modal */}
+      {/* API Key Modal */}
       <ApiKeyModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
-        language={language}
+        language="en"
         hasApiKey={hasApiKey}
         onKeyUpdated={() => {
-          checkConfigAndDemos();
+          checkConfig();
           setIsSettingsOpen(false);
         }}
       />

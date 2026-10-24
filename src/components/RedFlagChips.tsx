@@ -1,6 +1,5 @@
 import React from 'react';
-import { RedFlag, RedFlagType, AppLanguage } from '../types/scam';
-import { translations } from '../translations/i18n';
+import { RedFlag, RedFlagType } from '../types/scam';
 import {
   ShieldAlert,
   Flame,
@@ -15,15 +14,20 @@ import {
 
 interface RedFlagChipsProps {
   redFlags: RedFlag[];
-  language: AppLanguage;
 }
 
-export const RedFlagChips: React.FC<RedFlagChipsProps> = ({
-  redFlags,
-  language,
-}) => {
-  const t = translations[language];
+const RED_FLAG_TITLES: Record<RedFlagType, string> = {
+  AUTHORITY_IMPERSONATION: 'Authority Impersonation (Police / CBI / Bank)',
+  THREAT_ARREST: 'Arrest / Legal Threat ("Digital Arrest")',
+  URGENCY: 'Artificial Urgency & Panic',
+  OTP_REQUEST: 'OTP / Security Code Demanded',
+  MONEY_TRANSFER: 'Demand for Fund Transfer / Penalty',
+  SECRECY_ISOLATION: 'Isolation & Secrecy Pressure',
+  REMOTE_APP: 'Remote Access App Installation',
+  PERSONAL_DATA: 'Sensitive Personal / Banking Data Demanded',
+};
 
+export const RedFlagChips: React.FC<RedFlagChipsProps> = ({ redFlags }) => {
   const getFlagIcon = (type: RedFlagType) => {
     switch (type) {
       case 'AUTHORITY_IMPERSONATION':
@@ -51,19 +55,18 @@ export const RedFlagChips: React.FC<RedFlagChipsProps> = ({
     <div className="card" style={{ marginTop: '1.25rem' }}>
       <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <ShieldAlert size={20} color="#ef4444" />
-        {t.redFlagsTitle} ({redFlags.length})
+        Detected Red Flags ({redFlags.length})
       </h3>
 
       {redFlags.length === 0 ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '1rem', color: '#34d399', fontSize: '0.95rem' }}>
           <CheckCircle2 size={20} />
-          <span>{t.noRedFlagsYet}</span>
+          <span>No suspicious red flags detected. The call conversation is safe.</span>
         </div>
       ) : (
         <div className="chips-container">
           {redFlags.map((flag, idx) => {
-            const flagTitle = t.redFlagNames[flag.type] || flag.type;
-            const flagDesc = t.redFlagDescriptions[flag.type] || '';
+            const flagTitle = RED_FLAG_TITLES[flag.type] || flag.type;
 
             return (
               <div key={`${flag.type}-${idx}`} className="flag-chip">
@@ -71,12 +74,6 @@ export const RedFlagChips: React.FC<RedFlagChipsProps> = ({
                   {getFlagIcon(flag.type)}
                   <span>{flagTitle}</span>
                 </div>
-
-                {flagDesc && (
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                    {flagDesc}
-                  </div>
-                )}
 
                 {flag.evidence && (
                   <div className="flag-quote">

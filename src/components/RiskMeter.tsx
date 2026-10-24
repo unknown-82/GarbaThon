@@ -1,20 +1,13 @@
 import React from 'react';
-import { CallRiskReport, AppLanguage, RiskLevel } from '../types/scam';
-import { translations } from '../translations/i18n';
+import { CallRiskReport, RiskLevel } from '../types/scam';
 import { ShieldCheck, AlertCircle, AlertOctagon, Lock } from 'lucide-react';
 
 interface RiskMeterProps {
   report: CallRiskReport;
-  language: AppLanguage;
   isLatched: boolean;
 }
 
-export const RiskMeter: React.FC<RiskMeterProps> = ({
-  report,
-  language,
-  isLatched,
-}) => {
-  const t = translations[language];
+export const RiskMeter: React.FC<RiskMeterProps> = ({ report, isLatched }) => {
   const { score, risk_level } = report;
 
   // Calculate needle angle on a 180-degree semi-circle gauge (-90 deg to +90 deg)
@@ -28,6 +21,7 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({
           bg: 'rgba(239, 68, 68, 0.15)',
           border: '#ef4444',
           className: 'scam',
+          label: 'SCAM DETECTED!',
           Icon: AlertOctagon,
         };
       case 'SUSPICIOUS':
@@ -36,6 +30,7 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({
           bg: 'rgba(245, 158, 11, 0.15)',
           border: '#f59e0b',
           className: 'suspicious',
+          label: 'Suspicious Activity',
           Icon: AlertCircle,
         };
       case 'SAFE':
@@ -45,6 +40,7 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({
           bg: 'rgba(16, 185, 129, 0.15)',
           border: '#10b981',
           className: 'safe',
+          label: 'Safe Call',
           Icon: ShieldCheck,
         };
     }
@@ -57,7 +53,7 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({
     <div className={`card risk-meter-card ${theme.className}`}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
-          {t.riskMeterTitle}
+          Risk Assessment
         </h3>
         {isLatched && (
           <span
@@ -74,7 +70,7 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({
               letterSpacing: '0.04em',
             }}
           >
-            <Lock size={12} /> LATCHED SCAM
+            <Lock size={12} /> SCAM LATCHED
           </span>
         )}
       </div>
@@ -153,21 +149,18 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({
       >
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
           <StatusIcon size={20} />
-          {t.riskStatus[risk_level]}
+          {theme.label}
         </span>
       </div>
 
-      {/* Elder reason text snippet */}
+      {/* Simple explanation */}
       <div style={{ marginTop: '0.75rem', fontSize: '0.95rem', color: 'var(--text-primary)', textAlign: 'center', lineHeight: 1.4 }}>
-        {language === 'gu'
-          ? report.reason_gu
-          : language === 'hi'
-          ? report.reason_hi
-          : risk_level === 'SCAM'
-          ? 'Scam pattern detected! Hang up immediately.'
-          : risk_level === 'SUSPICIOUS'
-          ? 'Suspicious activity detected. Exercise caution.'
-          : 'Call conversation is normal and safe.'}
+        {report.reason_en ||
+          (risk_level === 'SCAM'
+            ? 'Scam pattern detected! High risk of financial extortion.'
+            : risk_level === 'SUSPICIOUS'
+            ? 'Unusual inquiries or urgency detected in conversation.'
+            : 'Conversation is completely normal and safe.')}
       </div>
     </div>
   );

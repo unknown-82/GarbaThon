@@ -19,10 +19,12 @@ export interface CallRiskReport {
   risk_level: RiskLevel;
   score: number;
   red_flags: RedFlag[];
-  reason_gu: string;
-  reason_hi: string;
-  advice_gu: string;
-  advice_hi: string;
+  reason_en?: string;
+  advice_en?: string;
+  reason_gu?: string;
+  reason_hi?: string;
+  advice_gu?: string;
+  advice_hi?: string;
   evaluatedAt?: number;
   sourceChunk?: number;
 }

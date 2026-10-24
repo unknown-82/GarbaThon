@@ -6,6 +6,8 @@ export class RiskEngine {
   private latchedScam: boolean = false;
   private maxScore: number = 0;
   private allRedFlags: Map<RedFlagType, RedFlag> = new Map();
+  private latestReasonEn: string = '';
+  private latestAdviceEn: string = '';
   private latestReasonGu: string = '';
   private latestReasonHi: string = '';
   private latestAdviceGu: string = '';
@@ -19,6 +21,8 @@ export class RiskEngine {
     this.latchedScam = false;
     this.maxScore = 0;
     this.allRedFlags.clear();
+    this.latestReasonEn = '';
+    this.latestAdviceEn = '';
     this.latestReasonGu = '';
     this.latestReasonHi = '';
     this.latestAdviceGu = '';
@@ -50,6 +54,8 @@ export class RiskEngine {
       }
     }
 
+    if (incoming.reason_en) this.latestReasonEn = incoming.reason_en;
+    if (incoming.advice_en) this.latestAdviceEn = incoming.advice_en;
     if (incoming.reason_gu) this.latestReasonGu = incoming.reason_gu;
     if (incoming.reason_hi) this.latestReasonHi = incoming.reason_hi;
     if (incoming.advice_gu) this.latestAdviceGu = incoming.advice_gu;
@@ -80,6 +86,20 @@ export class RiskEngine {
     } else {
       finalRiskLevel = 'SAFE';
     }
+
+    const defaultReasonEn =
+      finalRiskLevel === 'SCAM'
+        ? 'High-risk scam detected! The caller uses threats, impersonation, or urgency to coerce action.'
+        : finalRiskLevel === 'SUSPICIOUS'
+        ? 'Suspicious activity detected. The caller is making unusual claims or inquiries.'
+        : 'The call is safe and normal. No scam patterns detected.';
+
+    const defaultAdviceEn =
+      finalRiskLevel === 'SCAM'
+        ? 'Hang up immediately! Never share OTPs, transfer money, or install remote access software.'
+        : finalRiskLevel === 'SUSPICIOUS'
+        ? 'Do not provide sensitive banking or personal information to unsolicited callers.'
+        : 'Call is completely safe to continue.';
 
     // Default messages if not provided by Gemini
     const defaultReasonGu =
@@ -114,6 +134,8 @@ export class RiskEngine {
       risk_level: finalRiskLevel,
       score: this.maxScore,
       red_flags: distinctFlagsList,
+      reason_en: this.latestReasonEn || defaultReasonEn,
+      advice_en: this.latestAdviceEn || defaultAdviceEn,
       reason_gu: this.latestReasonGu || defaultReasonGu,
       reason_hi: this.latestReasonHi || defaultReasonHi,
       advice_gu: this.latestAdviceGu || defaultAdviceGu,
