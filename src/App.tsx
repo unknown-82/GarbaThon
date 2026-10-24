@@ -235,46 +235,44 @@ export const App: React.FC = () => {
         disabled={isPlaying}
       />
 
-      {/* Cyber Crime Helpline Action Bar (Shown after audio is uploaded) */}
-      {currentFileName && (
+      {/* Call Cyber Crime Action Bar: ONLY displayed when a SCAM is detected */}
+      {currentFileName && isScam && (
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            background: isScam
-              ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.25) 100%)'
-              : 'rgba(30, 41, 59, 0.7)',
-            border: `1px solid ${isScam ? '#ef4444' : 'var(--border-color)'}`,
+            background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(185, 28, 28, 0.3) 100%)',
+            border: '2px solid #ef4444',
             borderRadius: '0.85rem',
-            padding: '0.85rem 1.25rem',
+            padding: '1rem 1.25rem',
             marginBottom: '1.25rem',
             flexWrap: 'wrap',
             gap: '0.75rem',
-            transition: 'all 0.3s ease',
+            animation: 'slideIn 0.3s ease-out',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div
               style={{
-                width: '2.25rem',
-                height: '2.25rem',
+                width: '2.5rem',
+                height: '2.5rem',
                 borderRadius: '50%',
-                background: isScam ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+                background: 'rgba(239, 68, 68, 0.25)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: isScam ? '#ef4444' : '#60a5fa',
+                color: '#ef4444',
               }}
             >
-              {isScam ? <AlertTriangle size={18} /> : <Phone size={18} />}
+              <AlertTriangle size={22} />
             </div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '0.95rem', color: isScam ? '#fca5a5' : '#f8fafc' }}>
-                {isScam ? 'Scam Threat Identified' : 'Suspicious of this call?'}
+              <div style={{ fontWeight: 800, fontSize: '1rem', color: '#fca5a5' }}>
+                🚨 Confirmed Scam Call Detected!
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                Dial the National Cyber Crime Helpline for immediate assistance & fund freezes
+              <div style={{ fontSize: '0.825rem', color: '#cbd5e1' }}>
+                Report immediately to the National Cyber Crime Helpline before money is transferred.
               </div>
             </div>
           </div>
@@ -283,12 +281,12 @@ export const App: React.FC = () => {
             className="btn-danger"
             onClick={() => setIsCyberCrimeModalOpen(true)}
             style={{
-              padding: '0.6rem 1.25rem',
+              padding: '0.65rem 1.35rem',
               fontSize: '0.95rem',
               gap: '0.5rem',
             }}
           >
-            <Phone size={16} />
+            <Phone size={18} />
             <span>Call Cyber Crime (1930)</span>
           </button>
         </div>

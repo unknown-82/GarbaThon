@@ -115,6 +115,11 @@ export class AudioStreamer {
     const resampleRatio = this.targetSampleRate / sourceSampleRate;
 
     this.processorNode.onaudioprocess = (e) => {
+      // Ensure processor never leaks or generates any sound to speakers
+      for (let ch = 0; ch < e.outputBuffer.numberOfChannels; ch++) {
+        e.outputBuffer.getChannelData(ch).fill(0);
+      }
+
       if (!this.isPlaying) return;
 
       const inputChannelData = e.inputBuffer.getChannelData(0);
@@ -175,14 +180,17 @@ export class AudioStreamer {
     };
 
     // Connect graph:
-    // source -> analyser -> gain -> speakers (audioContext.destination)
-    // source -> processor -> gain (silent pass-through to keep processor active)
+    // source -> analyser -> gain -> speakers (Pure uploaded audio playback)
     this.sourceNode.connect(this.analyserNode);
     this.analyserNode.connect(this.gainNode);
     this.gainNode.connect(ctx.destination);
 
+    // Muted processor pass-through to capture PCM without any audio leak
+    const silentGain = ctx.createGain();
+    silentGain.gain.value = 0.0;
     this.sourceNode.connect(this.processorNode);
-    this.processorNode.connect(this.gainNode);
+    this.processorNode.connect(silentGain);
+    silentGain.connect(ctx.destination);
 
     const offset = startOffsetSeconds || this.pauseOffset;
     this.sourceNode.start(0, offset);
