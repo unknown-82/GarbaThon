@@ -163,19 +163,41 @@ ${transcriptSoFar || '(Streaming audio input)'}
       });
     }
 
-    const response = await ai.models.generateContent({
-      model: flashModel,
-      contents: [
-        {
-          role: 'user',
-          parts: parts,
-        },
-      ],
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: REPORT_CALL_RISK_TOOL.parameters,
-      },
-    });
+    const candidateModels = [
+      FLASH_MODEL,
+      'gemini-3.7-flash',
+      'gemini-flash-latest',
+      'gemini-3.5-flash',
+    ];
+
+    let response = null;
+    let lastErr = null;
+
+    for (const modelName of candidateModels) {
+      try {
+        response = await ai.models.generateContent({
+          model: modelName,
+          contents: [
+            {
+              role: 'user',
+              parts: parts,
+            },
+          ],
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: REPORT_CALL_RISK_TOOL.parameters,
+          },
+        });
+        if (response && response.text) break;
+      } catch (err) {
+        lastErr = err;
+        console.warn(`Candidate model ${modelName} returned error: ${err.message}. Retrying with next model...`);
+      }
+    }
+
+    if (!response || !response.text) {
+      throw lastErr || new Error('All candidate models failed to generate content');
+    }
 
     const parsedResult = JSON.parse(response.text || '{}');
     res.json(parsedResult);

@@ -68,7 +68,10 @@ export class GeminiLiveClient {
       this.modelName = model || 'gemini-3.8-live';
 
       // Step 2: Connect directly to Gemini Live API using ephemeral token
-      const ai = new GoogleGenAI({ apiKey: token });
+      const ai = new GoogleGenAI({
+        apiKey: token,
+        httpOptions: { apiVersion: 'v1alpha' },
+      });
 
       this.session = await ai.live.connect({
         model: this.modelName,

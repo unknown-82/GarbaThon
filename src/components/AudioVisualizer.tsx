@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, PhoneOff, Radio } from 'lucide-react';
+import { Play, Pause, RotateCcw, Radio } from 'lucide-react';
 import { AudioStreamer } from '../audio/audioStreamer';
 
 interface AudioVisualizerProps {
@@ -10,7 +10,6 @@ interface AudioVisualizerProps {
   onPlay: () => void;
   onPause: () => void;
   onReset: () => void;
-  onHangUp: () => void;
   disabled?: boolean;
 }
 
@@ -22,7 +21,6 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
   onPlay,
   onPause,
   onReset,
-  onHangUp,
   disabled,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -90,7 +88,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <Radio size={18} color={isPlaying ? '#34d399' : '#94a3b8'} className={isPlaying ? 'pulse-dot' : ''} />
           <span style={{ fontSize: '0.9rem', fontWeight: 600, color: isPlaying ? '#34d399' : 'var(--text-secondary)' }}>
-            {isPlaying ? 'AI Monitoring Call Audio Stream...' : 'Audio Ready'}
+            {isPlaying ? 'Analyzing Audio Stream in Real Time...' : 'Audio Ready'}
           </span>
         </div>
         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
@@ -111,7 +109,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
         <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
       </div>
 
-      {/* Controls */}
+      {/* Playback Controls */}
       <div className="player-controls">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           {!isPlaying ? (
@@ -122,12 +120,12 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
               style={{ opacity: disabled ? 0.6 : 1 }}
             >
               <Play size={20} fill="currentColor" />
-              <span>Play Call</span>
+              <span>Play Audio</span>
             </button>
           ) : (
             <button className="btn-primary" onClick={onPause} style={{ background: '#f59e0b' }}>
               <Pause size={20} fill="currentColor" />
-              <span>Pause Call</span>
+              <span>Pause Audio</span>
             </button>
           )}
 
@@ -141,17 +139,6 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
             <span>Restart</span>
           </button>
         </div>
-
-        {/* Emergency Hang-up button */}
-        <button
-          className="btn-danger"
-          onClick={onHangUp}
-          disabled={!isPlaying}
-          style={{ opacity: !isPlaying ? 0.4 : 1 }}
-        >
-          <PhoneOff size={18} />
-          <span>Hang Up (Disconnect)</span>
-        </button>
       </div>
     </div>
   );
